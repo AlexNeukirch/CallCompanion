@@ -39,7 +39,7 @@ layoutAbout = [[sg.Text('CallCompanion alpha')],
 ]
 
 
-window = sg.Window('CallCompanion', layout, default_element_size=(40, 1), grab_anywhere=False, keep_on_top = onTop)
+window = sg.Window('CallCompanion', layout, default_element_size=(40, 1), grab_anywhere=True, keep_on_top = onTop, no_titlebar=True)
 #event, values = window.read()
 
 
