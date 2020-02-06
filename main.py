@@ -27,7 +27,7 @@ layout = [
     [sg.Text('Call Companion alpha aplhy', size=(30, 1), justification='center', font=("Helvetica", 25), relief=sg.RELIEF_RIDGE)],
     [sg.Text('_'  * 80)],
     [sg.Text('0', size=(3, 1), justification='center', font=("Helvetica", 25), relief=sg.RELIEF_RIDGE, key='jeden'), sg.Text('0', size=(3, 1), justification='center', font=("Helvetica", 25), relief=sg.RELIEF_RIDGE, key='dwa')],
-    [sg.ProgressBar(callSummary, orientation='h', size=(20, 20), key='progbar'), sg.Text('0%', key='trzy')],
+    [sg.ProgressBar(callSummary, orientation='h', size=(20, 20), key='progbar'), sg.Text('0%   ', key='trzy')],
     [sg.Text('_'  * 80)],
     [sg.Text('Nazwa Hotkey')],
     [sg.Button('Odebrany Call', tooltip='przyciśnij, jeśli odebrałeś calla'), sg.Button('Odrzucony Call')],
@@ -35,8 +35,8 @@ layout = [
     [sg.Button('Exit'), sg.Button('Save & Exit')]
 ]
 
-layoutAbout = [[sg.Text('AutoHotKeyGen v.0.6')],
-                 [sg.Text('Program utworzony w celu ułatwienia pracy.')],
+layoutAbout = [[sg.Text('CallCompanion alpha')],
+                 [sg.Text('Statystyki pracy.')],
                  [sg.Button('Powrót')]
 ]
 
@@ -74,10 +74,10 @@ while True:
     if event == "Odebrany Call":
         callAccepted += 1
         callSummary += 1
-        procent = callAccepted / callSummary
+        procent = int(callAccepted) / int(callSummary)
         window['jeden'](callAccepted)
         window['progbar'].update_bar(callAccepted, callSummary)
-        window['trzy'](str(procent * 100) + str(var))
+        window['trzy'](str(int(procent * 100)) + '%')
 
     if event == "Odrzucony Call":
         callSummary += 1
@@ -85,7 +85,7 @@ while True:
         procent = callAccepted / callSummary
         window['dwa'](callRejected)
         window['progbar'].update_bar(callAccepted, callSummary)
-        window['trzy'](str(procent * 100) + str(var))
+        window['trzy'](str(int(procent * 100)) + '%')
 
 
 window.close()
