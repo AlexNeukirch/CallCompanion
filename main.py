@@ -4,6 +4,7 @@ import PySimpleGUI as sg
 callAccepted = 0
 callRejected = 0
 callSummary = 0
+onTop = True
 
 
 sg.ChangeLookAndFeel('Dark')
@@ -29,7 +30,7 @@ layout = [
     [sg.Text('Nazwa Hotkey')],
     [sg.Button('Odebrany Call', tooltip='przyciśnij, jeśli odebrałeś calla'), sg.Button('Odrzucony Call')],
     [sg.Text('_'  * 80)],
-    [sg.Button('Exit'), sg.Button('Save & Exit')]
+    [sg.Button('Exit'), sg.Button('Save & Exit'), sg.Button('onTop'), sg.Text(str(onTop) + '  ', key='cztery')]
 ]
 
 layoutAbout = [[sg.Text('CallCompanion alpha')],
@@ -38,7 +39,7 @@ layoutAbout = [[sg.Text('CallCompanion alpha')],
 ]
 
 
-window = sg.Window('AutoHotKey', layout, default_element_size=(40, 1), grab_anywhere=False)
+window = sg.Window('CallCompanion', layout, default_element_size=(40, 1), grab_anywhere=False, keep_on_top = onTop)
 #event, values = window.read()
 
 
@@ -69,6 +70,14 @@ while True:
         window['dwa'](callRejected)
         window['progbar'].update_bar(callAccepted, callSummary)
         window['trzy'](str(int(procent * 100)) + '%')
+
+    if event == "onTop":
+        if onTop == False:
+            onTop = True
+            window['cztery']('True')
+        else:
+            onTop = False
+            window['cztery']('False')
 
 
 window.close()
