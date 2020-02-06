@@ -4,9 +4,6 @@ import PySimpleGUI as sg
 callAccepted = 0
 callRejected = 0
 callSummary = 0
-var = ord('%')
-
-
 
 
 sg.ChangeLookAndFeel('Dark')
@@ -48,28 +45,14 @@ window = sg.Window('AutoHotKey', layout, default_element_size=(40, 1), grab_anyw
 while True:
     event, values = window.read()
 
-#    cProduct = values['trzy']
-#    typologia = values['osiem']
-
     if event == None or event == "Exit":
         break
-
 
     if event == 'About...':
         windowAbout = sg.Window('About...', layoutAbout, grab_anywhere=True)
         event, values = windowAbout.read()
         if event == 'Powrót':
             windowAbout.close()
-
-    if event == "Reset":
-        window['jeden']('')
-        window['dwa']('')
-        window['trzy']('none')
-        window['cztery']('Tylko w przypadku: "Inne..."')
-        window['piec'](True)
-        window['osiem']('Lack of info')
-        window['dziewiec']('Tylko w przypadku: "Inne..."')
-        window['dziesiec']('')
 
     if event == "Odebrany Call":
         callAccepted += 1
