@@ -41,7 +41,7 @@ layoutAbout = [[sg.Text('CallCompanion alpha')],
 ]
 
 
-window = sg.Window('CallCompanion', layout, default_element_size=(40, 1), grab_anywhere=True, keep_on_top = onTop, no_titlebar=True)
+window = sg.Window('CallCompanion', layout, default_element_size=(40, 1), grab_anywhere=onTop, keep_on_top = onTop, no_titlebar=onTop)
 #event, values = window.read()
 
 file = open(x.strftime("%Y-%m-%d.txt"),"w")
