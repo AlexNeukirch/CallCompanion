@@ -25,13 +25,13 @@ column1 = [[sg.Text('Column 1', background_color='#F7F3EC', justification='cente
 layout = [
     [sg.Menu(menu_def, tearoff=True)],
     [sg.Text('Call Companion alpha aplhy', size=(30, 1), justification='center', font=("Helvetica", 25), relief=sg.RELIEF_RIDGE)],
-    [sg.Text('_'  * 80)],
+    [sg.Text('_' * 80)],
     [sg.Text('0', size=(3, 1), justification='center', font=("Helvetica", 25), relief=sg.RELIEF_RIDGE, key='jeden'), sg.Text('0', size=(3, 1), justification='center', font=("Helvetica", 25), relief=sg.RELIEF_RIDGE, key='dwa')],
     [sg.ProgressBar(callSummary, orientation='h', size=(20, 20), key='progbar'), sg.Text('0%   ', key='trzy')],
-    [sg.Text('_'  * 80)],
+    [sg.Text('_' * 80)],
     [sg.Text('Nazwa Hotkey')],
     [sg.Button('Odebrany Call', tooltip='przyciśnij, jeśli odebrałeś calla'), sg.Button('Odrzucony Call')],
-    [sg.Text('_'  * 80)],
+    [sg.Text('_' * 80)],
     [sg.Button('Exit'), sg.Button('Save & Exit'), sg.Button('onTop'), sg.Text(str(onTop) + '  ', key='cztery')]
 ]
 
