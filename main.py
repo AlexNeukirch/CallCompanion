@@ -26,9 +26,9 @@ layout = [
     [sg.Menu(menu_def, tearoff=True)],
     [sg.Text('Call Companion alpha alphy', size=(30, 1), justification='center', font=("Helvetica", 25), relief=sg.RELIEF_RIDGE)],
     [sg.Text('_' * 80)],
-    [sg.Text('0', size=(3, 1), justification='center', font=("Helvetica", 25), relief=sg.RELIEF_RIDGE, key='jeden'),
+    [sg.Text('0/0', size=(5, 1), justification='center', font=("Helvetica", 25), relief=sg.RELIEF_RIDGE, key='jeden'),
      sg.Text('0', size=(3, 1), justification='center', font=("Helvetica", 25), relief=sg.RELIEF_RIDGE, key='dwa')],
-    [sg.ProgressBar(callSummary, orientation='h', size=(20, 20), key='progbar'), sg.Text('0%   ', key='trzy')],
+    [sg.ProgressBar(callSummary, orientation='h', size=(25, 20), key='progbar'), sg.Text('0%   ', key='trzy')],
     [sg.Text('_' * 80)],
     [sg.Button('Odebrany Call', tooltip='przyciśnij, jeśli odebrałeś calla'), sg.Button('Odrzucony Call'), sg.Text('', size=(10, 2), font=('Helvetica', 12), justification='center', key='_OUTPUT_')],
     [sg.Text('_' * 80)],
@@ -67,7 +67,7 @@ while True:
         callAccepted += 1
         callSummary += 1
         procent = int(callAccepted) / int(callSummary)
-        window['jeden'](callAccepted)
+        window['jeden'](str(callAccepted) + '/' + str(callSummary))
         window['progbar'].update_bar(callAccepted, callSummary)
         window['trzy'](str(int(procent * 100)) + '%')
         f=open(x.strftime("logs/%Y-%m-%d.txt"), "a+")
@@ -84,6 +84,7 @@ while True:
         callSummary += 1
         callRejected += 1
         procent = callAccepted / callSummary
+        window['jeden'](str(callAccepted) + '/' + str(callSummary))
         window['dwa'](callRejected)
         window['progbar'].update_bar(callAccepted, callSummary)
         window['trzy'](str(int(procent * 100)) + '%')
