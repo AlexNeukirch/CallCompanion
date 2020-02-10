@@ -46,7 +46,7 @@ layoutAbout = [[sg.Text('CallCompanion alpha')],
 window = sg.Window('CallCompanion', layout, default_element_size=(40, 1), grab_anywhere=onTop, keep_on_top = onTop, no_titlebar=onTop)
 #event, values = window.read()
 
-file = open(x.strftime("%Y-%m-%d.txt"),"w")
+file = open(x.strftime("logs/%Y-%m-%d.txt"),"w")
 file.close()
 
 timer_running, counter = True, 0
@@ -70,7 +70,7 @@ while True:
         window['jeden'](callAccepted)
         window['progbar'].update_bar(callAccepted, callSummary)
         window['trzy'](str(int(procent * 100)) + '%')
-        f=open(x.strftime("%Y-%m-%d.txt"), "a+")
+        f=open(x.strftime("logs/%Y-%m-%d.txt"), "a+")
         f.write(str(callSummary) + '. ' + '%s ' %datetime.datetime.now())
         f.write('callAccepted\n')
         f.close()
@@ -87,7 +87,7 @@ while True:
         window['dwa'](callRejected)
         window['progbar'].update_bar(callAccepted, callSummary)
         window['trzy'](str(int(procent * 100)) + '%')
-        f=open(x.strftime("%Y-%m-%d.txt"), "a+")
+        f=open(x.strftime("logs/%Y-%m-%d.txt"), "a+")
         f.write(str(callSummary) + '. '  + '%s ' %datetime.datetime.now())
         f.write('callRejected\n')
         f.close()
