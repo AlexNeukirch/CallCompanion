@@ -24,15 +24,17 @@ column1 = [[sg.Text('Column 1', background_color='#F7F3EC', justification='cente
 
 layout = [
     [sg.Menu(menu_def, tearoff=True)],
-    [sg.Text('Call Companion alpha aplhy', size=(30, 1), justification='center', font=("Helvetica", 25), relief=sg.RELIEF_RIDGE)],
+    [sg.Text('Call Companion alpha alphy', size=(30, 1), justification='center', font=("Helvetica", 25), relief=sg.RELIEF_RIDGE)],
     [sg.Text('_' * 80)],
-    [sg.Text('0', size=(3, 1), justification='center', font=("Helvetica", 25), relief=sg.RELIEF_RIDGE, key='jeden'), sg.Text('0', size=(3, 1), justification='center', font=("Helvetica", 25), relief=sg.RELIEF_RIDGE, key='dwa')],
+    [sg.Text('0', size=(3, 1), justification='center', font=("Helvetica", 25), relief=sg.RELIEF_RIDGE, key='jeden'),
+     sg.Text('0', size=(3, 1), justification='center', font=("Helvetica", 25), relief=sg.RELIEF_RIDGE, key='dwa')],
     [sg.ProgressBar(callSummary, orientation='h', size=(20, 20), key='progbar'), sg.Text('0%   ', key='trzy')],
     [sg.Text('_' * 80)],
-    [sg.Text('Nazwa Hotkey')],
-    [sg.Button('Odebrany Call', tooltip='przyciśnij, jeśli odebrałeś calla'), sg.Button('Odrzucony Call')],
+    [sg.Button('Odebrany Call', tooltip='przyciśnij, jeśli odebrałeś calla'), sg.Button('Odrzucony Call'), sg.Text('', size=(10, 2), font=('Helvetica', 12), justification='center', key='_OUTPUT_')],
     [sg.Text('_' * 80)],
-    [sg.Button('Exit'), sg.Button('Save & Exit'), sg.Button('onTop'), sg.Text(str(onTop) + '  ', key='cztery')]
+    [sg.Button('Exit'),
+     #sg.Button('Save & Exit'), sg.Button('onTop'), sg.Text(str(onTop) + '  ', key='cztery')
+     ]
 ]
 
 layoutAbout = [[sg.Text('CallCompanion alpha')],
@@ -47,8 +49,10 @@ window = sg.Window('CallCompanion', layout, default_element_size=(40, 1), grab_a
 file = open(x.strftime("%Y-%m-%d.txt"),"w")
 file.close()
 
+timer_running, counter = True, 0
+
 while True:
-    event, values = window.read()
+    event, values = window.read(timeout = 10)
 
     if event == None or event == "Exit":
         break
@@ -70,6 +74,11 @@ while True:
         f.write(str(callSummary) + '. ' + '%s ' %datetime.datetime.now())
         f.write('callAccepted\n')
         f.close()
+        timer_running = 1
+        timer_running = 0
+        counter =0
+        timer_running = 1
+
                 
     if event == "Odrzucony Call":
         callSummary += 1
@@ -82,6 +91,15 @@ while True:
         f.write(str(callSummary) + '. '  + '%s ' %datetime.datetime.now())
         f.write('callRejected\n')
         f.close()
+        timer_running = 0
+        counter = 0
+        timer_running = 1
+
+
+    if timer_running:
+        window['_OUTPUT_'].update(
+            '{:02d}:{:02d}.{:02d}'.format((counter // 100) // 60, (counter // 100) % 60, counter % 100))
+        counter += 1
 
     if event == "onTop":
         if onTop == False:
