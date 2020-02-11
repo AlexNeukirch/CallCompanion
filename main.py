@@ -1,6 +1,7 @@
 #!/usr/bin/env Python3
 import PySimpleGUI as sg
 import datetime
+import os
 
 x = datetime.datetime.now()
 callAccepted = 0
@@ -46,6 +47,9 @@ layoutAbout = [[sg.Text('CallCompanion alpha')],
 window = sg.Window('CallCompanion', layout, default_element_size=(40, 1), grab_anywhere=onTop, keep_on_top = onTop, no_titlebar=onTop)
 #event, values = window.read()
 
+
+if not os.path.exists('logs'):
+    os.makedirs('logs')
 file = open(x.strftime("logs/%Y-%m-%d.txt"),"w")
 file.close()
 
@@ -102,13 +106,13 @@ while True:
             '{:02d}:{:02d}.{:02d}'.format((counter // 100) // 60, (counter // 100) % 60, counter % 100))
         counter += 1
 
-    if event == "onTop":
-        if onTop == False:
-            onTop = True
-            window['cztery']('True')
-        else:
-            onTop = False
-            window['cztery']('False')
+    # if event == "onTop":
+    #     if onTop == False:
+    #         onTop = True
+    #         window['cztery']('True')
+    #     else:
+    #         onTop = False
+    #         window['cztery']('False')
 
 
 window.close()
