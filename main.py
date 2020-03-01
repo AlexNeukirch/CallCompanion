@@ -65,7 +65,7 @@ layoutAbout = [[sg.Text('CallCompanion alpha')],
                [sg.Button('Powrót')]
                ]
 
-layoutUndo = [[sg.Text('Error')],
+layoutUndo = [[sg.Text('Warning')],
               [sg.Text('You can undo only once')],
               [sg.Button('Powrót')]
               ]
