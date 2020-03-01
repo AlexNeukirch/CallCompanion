@@ -1,4 +1,6 @@
 #!/usr/bin/env Python3
+# coding: utf-8
+
 import PySimpleGUI as sg
 import datetime
 import os
@@ -10,13 +12,15 @@ callSummary = 0
 callPolish = 0
 callGerman = 0
 callEnglish = 0
+lastCall = ''
+doubleUndoPrevention = 0
 onTop = True
 
 sg.ChangeLookAndFeel('Dark')
 
 # ------ Menu Definition ------ #
 menu_def = [['File', ['Open', 'Save', 'Exit', 'Properties']],
-            ['Edit', ['Paste', ['Special', 'Normal', ], 'Undo'], ],
+            ['Edit', ['Undo'], ],
             ['Help', 'About...'], ]
 
 # ------ Column Definition ------ #
@@ -42,10 +46,13 @@ layout = [
              key='callGermanKey'),
      sg.Text('0', size=(3, 1), justification='center', font=("Helvetica", 25), relief=sg.RELIEF_RIDGE,
              key='callEnglishKey')],
-    [sg.ProgressBar(callSummary, orientation='h', size=(25, 20), key='progbar'), sg.Text('0%   ', key='trzy')],
+    [sg.ProgressBar(callSummary, orientation='h', size=(25, 20), key='progbar'),
+     sg.Text('0%   ', key='trzy'),
+     sg.Text('Last Call:     ', key='lastCall')],
     [sg.Text('_' * 80)],
-    [sg.Button('Odebrany Call PL', tooltip='przyciśnij, jeśli odebrałeś calla polskiego'),
-     sg.Button('Odebrany Call DE'), sg.Button('Odebrany Call EN'), sg.Button('Odrzucony Call'),
+    [sg.Button('Odebrany Call PL'),
+     sg.Button('Odebrany Call DE'),
+     sg.Button('Odebrany Call EN'), sg.Button('Odrzucony Call'),
      sg.Text('', size=(10, 2), font=('Helvetica', 12), justification='center', key='_OUTPUT_')],
     [sg.Text('_' * 80)],
     [sg.Button('Exit'),
@@ -57,6 +64,11 @@ layoutAbout = [[sg.Text('CallCompanion alpha')],
                [sg.Text('Statystyki pracy.')],
                [sg.Button('Powrót')]
                ]
+
+layoutUndo = [[sg.Text('Error')],
+              [sg.Text('You can undo only once')],
+              [sg.Button('Powrót')]
+              ]
 
 window = sg.Window('CallCompanion', layout, default_element_size=(40, 1), grab_anywhere=onTop, keep_on_top=onTop,
                    no_titlebar=onTop)
@@ -86,11 +98,14 @@ while True:
         callAccepted += 1
         callSummary += 1
         callPolish += 1
+        lastCall = 'PL'
+        doubleUndoPrevention = 1
         procent = int(callAccepted) / int(callSummary)
         window['jeden'](str(callAccepted) + '/' + str(callSummary))
         window['progbar'].update_bar(callAccepted, callSummary)
         window['trzy'](str(int(procent * 100)) + '%')
         window['callPolishKey'](callPolish)
+        window['lastCall']('Last Call: ' + lastCall)
         f = open(x.strftime("logs/%Y-%m-%d.txt"), "a+")
         f.write(str(callSummary) + '. ' + '%s ' % datetime.datetime.now())
         f.write('PolishCallAccepted\n')
@@ -104,11 +119,14 @@ while True:
         callAccepted += 1
         callSummary += 1
         callGerman += 1
+        lastCall = 'DE'
+        doubleUndoPrevention = 1
         procent = int(callAccepted) / int(callSummary)
         window['jeden'](str(callAccepted) + '/' + str(callSummary))
         window['progbar'].update_bar(callAccepted, callSummary)
         window['trzy'](str(int(procent * 100)) + '%')
         window['callGermanKey'](callGerman)
+        window['lastCall']('Last Call: ' + lastCall)
         f = open(x.strftime("logs/%Y-%m-%d.txt"), "a+")
         f.write(str(callSummary) + '. ' + '%s ' % datetime.datetime.now())
         f.write('GermanCallAccepted\n')
@@ -122,11 +140,14 @@ while True:
         callAccepted += 1
         callSummary += 1
         callEnglish += 1
+        lastCall = 'EN'
+        doubleUndoPrevention = 1
         procent = int(callAccepted) / int(callSummary)
         window['jeden'](str(callAccepted) + '/' + str(callSummary))
         window['progbar'].update_bar(callAccepted, callSummary)
         window['trzy'](str(int(procent * 100)) + '%')
         window['callEnglishKey'](callEnglish)
+        window['lastCall']('Last Call: ' + lastCall)
         f = open(x.strftime("logs/%Y-%m-%d.txt"), "a+")
         f.write(str(callSummary) + '. ' + '%s ' % datetime.datetime.now())
         f.write('EnglishCallAccepted\n')
@@ -139,6 +160,8 @@ while True:
     if event == "Odrzucony Call":
         callSummary += 1
         callRejected += 1
+        lastCall = "CR"  # CR - Call Rejected
+        doubleUndoPrevention = 1
         procent = callAccepted / callSummary
         window['jeden'](str(callAccepted) + '/' + str(callSummary))
         window['dwa'](callRejected)
@@ -156,6 +179,80 @@ while True:
         window['_OUTPUT_'].update(
             '{:02d}:{:02d}.{:02d}'.format((counter // 100) // 60, (counter // 100) % 60, counter % 100))
         counter += 1
+
+    if event == "Undo":
+        if doubleUndoPrevention == 0:
+            windowUndo = sg.Window('About...', layoutUndo, grab_anywhere=True)
+            event, values = windowUndo.read()
+            if event == 'Powrót':
+                windowUndo.close()
+
+        if lastCall == 'PL' and doubleUndoPrevention == 1:
+            callPolish -= 1
+            callSummary -= 1
+            callAccepted -= 1
+            doubleUndoPrevention = 0
+            procent = int(callAccepted) / int(callSummary)
+            window['jeden'](str(callAccepted) + '/' + str(callSummary))
+            window['progbar'].update_bar(callAccepted, callSummary)
+            window['trzy'](str(int(procent * 100)) + '%')
+            window['callPolishKey'](callPolish)
+            readFile = open(x.strftime("logs/%Y-%m-%d.txt"))
+            lines = readFile.readlines()
+            readFile.close()
+            f = open(x.strftime("logs/%Y-%m-%d.txt"), 'w')
+            f.writelines([item for item in lines[:-1]])
+            f.close()
+
+        if lastCall == 'DE' and doubleUndoPrevention == 1:
+            callGerman -= 1
+            callSummary -= 1
+            callAccepted -= 1
+            doubleUndoPrevention = 0
+            procent = int(callAccepted) / int(callSummary)
+            window['jeden'](str(callAccepted) + '/' + str(callSummary))
+            window['progbar'].update_bar(callAccepted, callSummary)
+            window['trzy'](str(int(procent * 100)) + '%')
+            window['callGermanKey'](callGerman)
+            readFile = open(x.strftime("logs/%Y-%m-%d.txt"))
+            lines = readFile.readlines()
+            readFile.close()
+            f = open(x.strftime("logs/%Y-%m-%d.txt"), 'w')
+            f.writelines([item for item in lines[:-1]])
+            f.close()
+
+        if lastCall == 'EN' and doubleUndoPrevention == 1:
+            callEnglish -= 1
+            callSummary -= 1
+            callAccepted -= 1
+            doubleUndoPrevention = 0
+            procent = int(callAccepted) / int(callSummary)
+            window['jeden'](str(callAccepted) + '/' + str(callSummary))
+            window['progbar'].update_bar(callAccepted, callSummary)
+            window['trzy'](str(int(procent * 100)) + '%')
+            window['callEnglishKey'](callEnglish)
+            readFile = open(x.strftime("logs/%Y-%m-%d.txt"))
+            lines = readFile.readlines()
+            readFile.close()
+            f = open(x.strftime("logs/%Y-%m-%d.txt"), 'w')
+            f.writelines([item for item in lines[:-1]])
+            f.close()
+
+        if lastCall == 'CR' and doubleUndoPrevention == 1:
+            callRejected -= 1
+            callSummary -= 1
+            doubleUndoPrevention = 0
+            procent = int(callAccepted) / int(callSummary)
+            window['jeden'](str(callAccepted) + '/' + str(callSummary))
+            window['progbar'].update_bar(callAccepted, callSummary)
+            window['trzy'](str(int(procent * 100)) + '%')
+            window['dwa'](callRejected)
+            readFile = open(x.strftime("logs/%Y-%m-%d.txt"))
+            lines = readFile.readlines()
+            readFile.close()
+            f = open(x.strftime("logs/%Y-%m-%d.txt"), 'w')
+            f.writelines([item for item in lines[:-1]])
+            f.close()
 
     # if event == "onTop":
     #     if onTop == False:
